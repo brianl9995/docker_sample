@@ -1,0 +1,6 @@
+Django==2.2.1
+gunicorn==19.9.0
+psycopg2==2.8.2
+pytz==2019.1
+celery==4.3.0
+django-celery-results==1.1.0

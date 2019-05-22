@@ -1,0 +1,41 @@
+version: "3.7"
+services:
+    db:
+        image: postgres:11.3
+        environment:
+            - POSTGRES_DB=${BD_NAME}
+            - POSTGRES_USER=${BD_USER}
+            - POSTGRES_PASSWORD=${BD_PASSWORD}
+        volumes:
+            - ./postgres/:/var/lib/postgresql/data
+        ports:
+            - "25432:5432"
+        networks:
+            - webnet
+    web:
+        build: .
+        command: ./wait-for-it.sh db:5432 -- python manage.py runserver 0.0.0.0:8000
+        volumes:
+            - ./sample/:/app
+        ports:
+            - "${SERVER_PORT}:8000"
+        depends_on:
+            - db
+        networks:
+            - webnet
+    rabbit:
+        image: rabbitmq:3
+        ports:
+            - "25672:5672"
+        networks:
+            - webnet
+    celery:
+        build: .
+        command: celery -A sample worker -l info
+        volumes:
+            - ./sample/:/app
+        networks:
+            - webnet
+
+networks:
+    webnet:
