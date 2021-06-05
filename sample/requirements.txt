@@ -1,4 +1,4 @@
-Django==2.2.20
+Django==2.2.21
 gunicorn==19.9.0
 psycopg2==2.8.5
 pytz==2020.1
